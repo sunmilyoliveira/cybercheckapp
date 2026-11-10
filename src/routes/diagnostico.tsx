@@ -27,7 +27,7 @@ function Diagnostico() {
   const [error, setError] = useState(false);
   const [saving, setSaving] = useState(false);
 
-  const category = CATEGORIES[step];
+  const category = CATEGORIES[step] ?? CATEGORIES[0]!;
   const questions = QUESTIONS.filter((q) => q.category === category.id);
   const isLast = step === CATEGORIES.length - 1;
   const progress = Math.round((Object.keys(answers).length / QUESTIONS.length) * 100);

@@ -160,13 +160,13 @@ function AdvancedReport({ diagnosticId, score }: { diagnosticId: string | null; 
     if (name.trim().length < 2) errs.name = "Informe seu nome.";
     if (digits.length < 10 || digits.length > 11) errs.phone = "Informe um WhatsApp com DDD (10 ou 11 dígitos).";
     setErrors(errs);
-    if (Object.keys(errs).length) return;
+    if (Object.keys(errs).length) return undefined;
     setSaving(true);
     const { error } = await supabase.from("interest_requests").insert({
       name: name.trim().slice(0, 80), whatsapp: digits, diagnostic_id: diagnosticId, total_score: score,
     });
     setSaving(false);
-    if (error) return toast.error("Não foi possível registrar seu interesse. Tente novamente.");
+    if (error) { toast.error("Não foi possível registrar seu interesse. Tente novamente."); return; }
     setDone(true);
     toast.success("Interesse registrado!");
   }

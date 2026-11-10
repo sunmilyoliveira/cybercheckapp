@@ -34,7 +34,7 @@ function AuthPage() {
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
     setLoading(false);
-    if (error) return setError("E-mail ou senha incorretos.");
+    if (error) { setError("E-mail ou senha incorretos."); return; }
     toast.success("Bem-vindo(a) de volta!");
     navigate({ to: "/admin" });
   }

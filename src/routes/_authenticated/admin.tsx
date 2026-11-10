@@ -104,7 +104,7 @@ function Dashboard() {
 
   async function setStatus(id: string, status: Status) {
     const { error } = await supabase.from("interest_requests").update({ status }).eq("id", id);
-    if (error) return toast.error("Não foi possível atualizar o status.");
+    if (error) { toast.error("Não foi possível atualizar o status."); return; }
     toast.success("Status atualizado.");
     qc.invalidateQueries({ queryKey: ["admin-interest"] });
   }

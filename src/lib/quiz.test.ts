@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { QUESTIONS, calculateResult, classify, type Answers } from "./quiz";
 
 const all = (pick: (i: number) => number): Answers =>
-  Object.fromEntries(QUESTIONS.map((q) => [q.id, q.options[pick(0)].id]));
+  Object.fromEntries(QUESTIONS.map((q) => [q.id, q.options[pick(0)]!.id]));
 
 describe("pontuação", () => {
   it("todas as melhores respostas = 100", () => {
@@ -21,7 +21,7 @@ describe("pontuação", () => {
     expect(r.categories.senhas).toBe(50);
     expect(r.total).toBe(90);
     expect(r.improvements).toHaveLength(1);
-    expect(r.improvements[0].priority).toBe("alta");
+    expect(r.improvements[0]?.priority).toBe("alta");
   });
   it("lança erro com resposta faltando", () => {
     expect(() => calculateResult({})).toThrow();
