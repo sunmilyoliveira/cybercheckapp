@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## CyberCheck
+- Scoring lives in `src/lib/quiz.ts` (deterministic, tested in `quiz.test.ts`); never compute scores with AI or external APIs.
+- Public visitors insert diagnostics/interest rows anonymously; only users with `admin` in `user_roles` (checked via `has_role`) can read them — keeps admin data private.
+- The first auth account created gets `admin` via trigger `bootstrap_first_admin`; extra admins are added by inserting into `user_roles`.
