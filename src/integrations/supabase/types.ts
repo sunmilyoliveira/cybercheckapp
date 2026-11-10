@@ -14,16 +14,114 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      diagnostics: {
+        Row: {
+          answers: Json
+          created_at: string
+          id: string
+          score_backup: number
+          score_contas: number
+          score_dispositivos: number
+          score_golpes: number
+          score_senhas: number
+          total_score: number
+        }
+        Insert: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          score_backup: number
+          score_contas: number
+          score_dispositivos: number
+          score_golpes: number
+          score_senhas: number
+          total_score: number
+        }
+        Update: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          score_backup?: number
+          score_contas?: number
+          score_dispositivos?: number
+          score_golpes?: number
+          score_senhas?: number
+          total_score?: number
+        }
+        Relationships: []
+      }
+      interest_requests: {
+        Row: {
+          created_at: string
+          diagnostic_id: string | null
+          id: string
+          name: string
+          status: Database["public"]["Enums"]["interest_status"]
+          total_score: number | null
+          whatsapp: string
+        }
+        Insert: {
+          created_at?: string
+          diagnostic_id?: string | null
+          id?: string
+          name: string
+          status?: Database["public"]["Enums"]["interest_status"]
+          total_score?: number | null
+          whatsapp: string
+        }
+        Update: {
+          created_at?: string
+          diagnostic_id?: string | null
+          id?: string
+          name?: string
+          status?: Database["public"]["Enums"]["interest_status"]
+          total_score?: number | null
+          whatsapp?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interest_requests_diagnostic_id_fkey"
+            columns: ["diagnostic_id"]
+            isOneToOne: false
+            referencedRelation: "diagnostics"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      interest_status: "novo" | "em_contato" | "concluido"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +248,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      interest_status: ["novo", "em_contato", "concluido"],
+    },
   },
 } as const
