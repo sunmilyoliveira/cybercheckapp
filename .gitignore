@@ -31,7 +31,6 @@ dist-ssr
 *.sln
 *.sw?
 
-# Arquivos de ambiente e credenciais
-.env
+# Arquivos de ambiente privados (o .env contém apenas chaves públicas e é necessário para o build)
 .env.*
 !.env.example
