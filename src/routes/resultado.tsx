@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { AlertTriangle, CheckCircle2, ClipboardList, FileText, ListChecks, Loader2, RotateCcw, Target, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -146,6 +146,8 @@ function AdvancedReport({ diagnosticId, score }: { diagnosticId: string | null; 
   const [errors, setErrors] = useState<{ name?: string; phone?: string }>({});
   const [saving, setSaving] = useState(false);
   const [done, setDone] = useState(false);
+  const [website, setWebsite] = useState(""); // honeypot: invisível para pessoas
+  const openedAt = useRef(0);
   const features = [
     { icon: FileText, t: "Análise organizada dos resultados" },
     { icon: Target, t: "Recomendações prioritárias" },
@@ -155,6 +157,12 @@ function AdvancedReport({ diagnosticId, score }: { diagnosticId: string | null; 
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
+    if (saving || done) return undefined;
+    // Robôs costumam preencher o campo oculto ou enviar instantaneamente.
+    if (website.trim() !== "" || Date.now() - openedAt.current < 1500) {
+      setDone(true);
+      return undefined;
+    }
     const digits = phone.replace(/\D/g, "");
     const errs: typeof errors = {};
     if (name.trim().length < 2) errs.name = "Informe seu nome.";
@@ -185,7 +193,7 @@ function AdvancedReport({ diagnosticId, score }: { diagnosticId: string | null; 
         </div>
         <div className="space-y-3 rounded-2xl border border-navy-foreground/10 bg-navy-foreground/5 p-5">
           <p className="text-sm text-navy-muted">Esta é uma oferta em teste. Nenhum pagamento é feito agora: ao demonstrar interesse, nossa equipe entra em contato pelo WhatsApp.</p>
-          <Button variant="hero" size="xl" className="w-full" onClick={() => setOpen(true)} disabled={done}>
+          <Button variant="hero" size="xl" className="w-full" onClick={() => { openedAt.current = Date.now(); setOpen(true); }} disabled={done}>
             {done ? <><CheckCircle2 /> Interesse registrado</> : "Tenho interesse"}
           </Button>
         </div>
@@ -215,6 +223,10 @@ function AdvancedReport({ diagnosticId, score }: { diagnosticId: string | null; 
                 <Label htmlFor="phone">WhatsApp com DDD</Label>
                 <Input id="phone" inputMode="tel" placeholder="(92) 99999-9999" value={phone} maxLength={20} onChange={(e) => setPhone(e.target.value)} aria-invalid={!!errors.phone} />
                 {errors.phone && <p className="text-sm text-danger">{errors.phone}</p>}
+              </div>
+              <div className="absolute -left-[9999px] h-px w-px overflow-hidden" aria-hidden="true">
+                <label htmlFor="cc_website">Não preencha este campo</label>
+                <input id="cc_website" name="cc_website" type="text" tabIndex={-1} autoComplete="off" value={website} onChange={(e) => setWebsite(e.target.value)} />
               </div>
               <p className="text-xs text-muted-foreground">Usaremos esses dados apenas para entrar em contato sobre o relatório.</p>
               <Button type="submit" className="w-full" size="lg" disabled={saving}>

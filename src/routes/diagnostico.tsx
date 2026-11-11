@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Info, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -26,6 +26,7 @@ function Diagnostico() {
   const [answers, setAnswers] = useState<Answers>({});
   const [error, setError] = useState(false);
   const [saving, setSaving] = useState(false);
+  const submitted = useRef(false); // evita envio duplicado (duplo clique)
 
   const category = CATEGORIES[step] ?? CATEGORIES[0]!;
   const questions = QUESTIONS.filter((q) => q.category === category.id);
@@ -43,6 +44,8 @@ function Diagnostico() {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
+    if (submitted.current) return;
+    submitted.current = true;
     setSaving(true);
     const r = calculateResult(answers);
     const id = crypto.randomUUID();
