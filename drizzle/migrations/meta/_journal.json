@@ -8,6 +8,13 @@
       "when": 1794278927251,
       "tag": "0000_migration",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794369622106,
+      "tag": "0001_harden_has_role_and_validate_answers",
+      "breakpoints": true
     }
   ]
 }
